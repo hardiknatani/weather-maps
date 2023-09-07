@@ -43,7 +43,7 @@
     </div>
     <div class="map-wrap">
       <div #map id="map">
-        <div class="bg-red map-overlay text-2xl font-bold " >
+        <div class="bg-red map-overlay text-2xl font-bold " *ngIf="this.currentDate.value" >
             <div class="w-full h-full  flex justify-between items-center text-center ">
             <span class="w-full">
               {{this.currentDate.value | date :"longDate"}}
