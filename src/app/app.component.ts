@@ -37,20 +37,20 @@ export class AppComponent implements OnInit,AfterViewInit,OnDestroy {
 showControls=false
 currentDate=new FormControl();
 
-windLayer:WindLayer = new WindLayer('wind', {}, {
-  wrapX:true,
-  windOptions: {
-    colorScale: [
-      "rgb(255,255,255)"
-    ],
-    paths: 5000,
-    frameRate: 16,
-    maxAge: 60,
-    globalAlpha: 0.9,
-    velocityScale: 0.01,
+// windLayer:WindLayer = new WindLayer('wind', {}, {
+//   wrapX:true,
+//   windOptions: {
+//     colorScale: [
+//       "rgb(255,255,255)"
+//     ],
+//     paths: 5000,
+//     frameRate: 16,
+//     maxAge: 60,
+//     globalAlpha: 0.9,
+//     velocityScale: 0.01,
     
-  }
-});
+//   }
+// });
 
 // fillLayer:any = new ScalarFill('wind-fill', {
 //   "type": "image",
@@ -219,54 +219,12 @@ return this.http.get(url)
 
 
       this.map.on('style.load',()=>{
-            
-                this.http.get('https://blog.sakitam.com/wind-layer/data/wind.json')
-              .subscribe((data:any)=>{
-                  this.windLayer.setData(data)
-                  this.map.addLayer((this.windLayer as any));
-                })
-                    // .subscribe(data => {
-            
-
-            
-                      // let windLayer:any = new WindLayer('wind', data, {
-                      //   windOptions: {
-                      
-                      //     colorScale: [
-                      //       "rgb(36,104, 180)",
-                      //       "rgb(60,157, 194)",
-                      //       "rgb(128,205,193 )",
-                      //       "rgb(151,218,168 )",
-                      //       "rgb(198,231,181)",
-                      //       "rgb(238,247,217)",
-                      //       "rgb(255,238,159)",
-                      //       "rgb(252,217,125)",
-                      //       "rgb(255,182,100)",
-                      //       "rgb(252,150,75)",
-                      //       "rgb(250,112,52)",
-                      //       "rgb(245,64,32)",
-                      //       "rgb(237,45,28)",
-                      //       "rgb(220,24,32)",
-                      //       "rgb(180,0,35)"
-                      //     ],
-                      //     paths: 5000,
-                      //     frameRate: 16,
-                      //     maxAge: 60,
-                      //     globalAlpha: 0.9,
-                      //     velocityScale: 0.01,
-                      //   },
-                      // });
-                      
-            
-                    // });
-            
             });
 
   }
 
 
 startAnimation(){
-
 
 
 
@@ -277,8 +235,8 @@ startAnimation(){
  });
 
 
- let fillLayer:ScalarFill|null = null
-
+ let fillLayer:ScalarFill|null = null;
+let windLayer:WindLayer|null = null;
 //  this.map.addLayer(fillLayer);
 
 
@@ -295,13 +253,12 @@ startAnimation(){
       // this.windLayer.setData(value)
       this.map.triggerRepaint()
 
-      if(fillLayer==null){
-        
+      if(fillLayer==null || windLayer == null){
       fillLayer =  new ScalarFill('wind-fill', {
           //  "type": "image",
           //  "url": 'https://sakitam.oss-cn-beijing.aliyuncs.com/codepen/wind-layer/image/var_ugrd-var_vgrd.png',
             "type": "jsonArray",
-            "data": JSON.parse(data[i]['value'].Body.toString()),
+            "data": value,
            "extent": [
              [-180, 85.051129],
              [-180, -85.051129],
@@ -341,7 +298,25 @@ startAnimation(){
            wrapX:true,
          },
          );
+
+      windLayer = new WindLayer('wind',value , {
+        wrapX:true,
+        windOptions: {
+          colorScale: [
+            "rgb(255,255,255)"
+          ],
+          paths: 5000,
+          frameRate: 16,
+          maxAge: 60,
+          globalAlpha: 0.9,
+          velocityScale: 0.01,
+          
+        }
+      });
+      
           this.map.addLayer((fillLayer as any));
+          this.map.addLayer((windLayer as any));
+
           this.map.triggerRepaint();
           let date = layerList[i].slice(9,17)
           // let date = this.currentDate.setValue(layerList[i].slice(9,17)[5])
@@ -355,9 +330,21 @@ startAnimation(){
           data:value
         });
 
+        windLayer.setData(value,{
+          // xmin: header.lo1, // 一般格点数据是按照矩形范围来切割，所以定义其经纬度范围
+          // ymin: header.la1,
+          // xmax: header.lo2,
+          // ymax: header.la2,
+          // deltaX: header.dx, // x（经度）增量
+          // deltaY: header.dy, // y（维度）增量
+          // cols: header.nx, // 列（可由 `(xmax - xmin) / deltaX` 得到）
+          // rows: header.ny, // 行
+          wrapX:true,
+          flipY:true
+        });
+
         this.map.triggerRepaint() ;
         let date = layerList[i].slice(9,17)
-        // let date = this.currentDate.setValue(layerList[i].slice(9,17)[5])
         this.currentDate.setValue(new Date(parseInt(date.substring(0, 4)), parseInt(date.substring(4, 6)) - 1, parseInt(date.substring(6, 8))));
 
       }
