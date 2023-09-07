@@ -1,0 +1,66 @@
+<mat-sidenav-container [hasBackdrop]="false" autoSize>
+  <mat-sidenav #sidenav opened mode="over" [disableClose]="true" class="p-0  w-fit transparent">
+    <div class="absolute  top-2 -right-12 z-9999 "  >
+      <button mat-mini-fab class="bg-white" (click)="sidenav.toggle()">
+        <mat-icon *ngIf="sidenav.opened">layers_clear</mat-icon>
+        <mat-icon *ngIf="!sidenav.opened">layers</mat-icon>
+      </button>
+    </div>
+
+<div class="mt-4 w-full p-2" >
+
+  <div class="flex flex-row justify-between items-center">
+    <mat-label>2023-05-01</mat-label>
+    <mat-label>2023-05-29</mat-label>
+  </div>
+  <!-- <div class="flex flex-row justify-between items-center">
+    <mat-label>Start Date</mat-label>
+    <mat-label>End Date</mat-label>
+  </div> -->
+<!-- <div class="w-full">  
+  <mat-slider class="w-full" >
+    <input [formControl]="currentDate"  matSliderThumb>
+  </mat-slider>
+</div> -->
+<div class="flex justify-between">
+  <button mat-raised-button (click)="startAnimation()" > Start </button>
+<button mat-raised-button (click)="stopAnimation()" > Stop </button>
+
+</div>
+</div>
+
+
+
+
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div *ngIf="!sidenav.opened" class="absolute top-2 left-2 z-50 ">
+      <button mat-mini-fab class="bg-white" (click)="sidenav.toggle()">
+        <mat-icon *ngIf="!sidenav.opened">layers</mat-icon>
+      </button>
+    </div>
+    <div class="map-wrap">
+      <div #map id="map">
+        <div class="bg-red map-overlay text-2xl font-bold " >
+            <div class="w-full h-full  flex justify-between items-center text-center ">
+            <span class="w-full">
+              {{this.currentDate.value | date :"longDate"}}
+
+            </span>
+            </div>
+        </div>
+      </div>
+<div class="map-position-info" >
+<div class="flex gap-3">
+  <pre id="position-info"></pre>
+  <pre id="zoom-info"></pre>
+</div>
+
+</div> 
+
+
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
